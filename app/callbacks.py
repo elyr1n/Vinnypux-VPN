@@ -3,7 +3,7 @@ from aiogram.types import CallbackQuery, InlineKeyboardMarkup, InlineKeyboardBut
 from aiogram.enums import ParseMode
 from aiogram.fsm.context import FSMContext
 
-from blockchain_networks import networks
+from app.blockchain_networks import networks
 
 router = Router()
 
