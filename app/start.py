@@ -13,6 +13,6 @@ async def start(message: Message):
         "Политика конфиденциальности (https://vinnypux.com/privacy)",
         parse_mode="Markdown",
         reply_markup=InlineKeyboardMarkup(inline_keyboard=[
-            [InlineKeyboardButton(text="Оформить подписку", callback_data="get_podpiska")]
+            [InlineKeyboardButton(text="Оформить подписку", callback_data="get_subscription")]
         ])
     )
