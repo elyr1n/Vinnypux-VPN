@@ -21,10 +21,10 @@ async def plan(callback: CallbackQuery):
     await callback.answer()
     await callback.message.edit_text(f"Вы оплачиваете: + 4 устройства, месяцев: {month}.\nСумма: {price}₽ (Скидка: -{discount}%)\n\nВыберите удобный способ оплаты")
     await callback.message.edit_reply_markup(reply_markup=InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text="QR/СБП", callback_data="unavailable")]
-        [InlineKeyboardButton(text="Международные карты", callback_data="unavailable")]
-        [InlineKeyboardButton(text="Криптовалюта", callback_data="cryptowallet")]
-        [InlineKeyboardButton(text="CryptoBot", callback_data="unavailable")]
+        [InlineKeyboardButton(text="QR/СБП", callback_data="unavailable")],
+        [InlineKeyboardButton(text="Международные карты", callback_data="unavailable")],
+        [InlineKeyboardButton(text="Криптовалюта", callback_data="cryptowallet")],
+        [InlineKeyboardButton(text="CryptoBot", callback_data="unavailable")],
         [InlineKeyboardButton(text="Банковская карта", callback_data="unavailable")]
     ]))
     
