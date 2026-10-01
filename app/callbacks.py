@@ -61,5 +61,5 @@ async def send_address_network(callback: CallbackQuery, state: FSMContext):
     _, network = callback.data.split("_")
 
     await callback.answer()
-    await callback.message.edit_text(f"![👛](tg://emoji?id=5769403330761593044) Сеть: {network}\n![👛](tg://emoji?id=5769403330761593044) Адрес: {networks[network]["address"]}\nСумма: {"$" + int(price) / networks[network]["rate"]}\n\n![⚡️](tg://emoji?id=5843553939672274145) Ожидаем оплату в размере , после чего вернемся к Вам с уведомлением о подписке", parse_mode=ParseMode.MARKDOWN_V2)
+    await callback.message.edit_text(f"![👛](tg://emoji?id=5769403330761593044) Сеть: {network}\n![👛](tg://emoji?id=5769403330761593044) Адрес: {networks[network]["address"]}\nСумма: ${int(price) / networks[network]["rate"]}\n\n![⚡️](tg://emoji?id=5843553939672274145) Ожидаем оплату в размере , после чего вернемся к Вам с уведомлением о подписке", parse_mode=ParseMode.MARKDOWN_V2)
     await callback.message.edit_reply_markup()
