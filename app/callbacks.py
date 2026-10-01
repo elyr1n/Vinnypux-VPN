@@ -75,20 +75,28 @@ async def cryptowallet(callback: CallbackQuery):
 
 @router.callback_query(F.data.startswith("network_"))
 async def send_address_network(callback: CallbackQuery, state: FSMContext):
-    data = await state.get_data()
-    month, price = data["month"], data["price"]
-    amount = int(price) / networks[network]['rate']
-
-    _, network = callback.data.split("_")
-
     await callback.answer()
-    await callback.message.edit_text(
-        "![👛](tg://emoji?id=5769403330761593044) Сеть: "
-        f"{network}\n"
-        "![👛](tg://emoji?id=5769403330761593044) Адрес: "
-        f"`{networks[network]['address']}`\n"
-        f"Сумма: `${amount:.4f}`\n\n"
-        "![⚡️](tg://emoji?id=5843553939672274145) Ожидаем оплату, после чего вернемся к Вам с уведомлением о подписке",
-        parse_mode=ParseMode.MARKDOWN_V2,
-    )
-    await callback.message.edit_reply_markup()
+
+    try:
+        data = await state.get_data()
+        month, price = data["month"], data["price"]
+        _, network = callback.data.split("_")
+
+        await callback.message.edit_text(
+            "![👛](tg://emoji?id=5769403330761593044) Сеть: "
+            f"{network}\n"
+            "![👛](tg://emoji?id=5769403330761593044) Адрес: "
+            f"`{networks[network]['address']}`\n"
+            "![👛](tg://emoji?id=5769403330761593044) Сумма: "
+            f"`${int(price) / networks[network]['rate']:.4f}`\n\n"
+            "![⚡️](tg://emoji?id=5843553939672274145) Ожидаем оплату, после чего вернемся к Вам с уведомлением о подписке",
+            parse_mode=ParseMode.MARKDOWN_V2,
+        )
+        await callback.message.edit_reply_markup(reply_markup=InlineKeyboardMarkup(inline_keyboard=[
+            [InlineKeyboardButton(text="Назад", callback_data="get_subscription")]
+        ]))
+    except KeyError:
+        await callback.message.answer("Произошла ошибка с оплатой. Повторите попытку.")
+        await callback.message.edit_reply_markup(reply_markup=InlineKeyboardMarkup(inline_keyboard=[
+            [InlineKeyboardButton(text="Повторить попытку", callback_data="get_subscription")]
+        ]))
