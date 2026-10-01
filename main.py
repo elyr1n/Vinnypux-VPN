@@ -6,6 +6,7 @@ from dotenv import load_dotenv
 from aiogram import Bot, Dispatcher
 
 from app.start import router as start
+from app.callbacks import router as callbacks
 
 
 async def main():
@@ -15,6 +16,7 @@ async def main():
     dp = Dispatcher()
 
     dp.include_router(start)
+    dp.include_router(callbacks)
 
     logging.basicConfig(level=logging.INFO)
 
