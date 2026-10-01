@@ -20,7 +20,7 @@ async def plan(callback: CallbackQuery):
     _, month, price, discount = callback.data.split(":")
 
     await callback.answer()
-    await callback.message.edit_text(f"![👛](tg://emoji?id=5769403330761593044) Вы оплачиваете: + 4 устройства, месяцев: {month}.\n![👛](tg://emoji?id=5769403330761593044) Сумма: {price}₽ (Скидка: -{discount}%)\n\n![📷](tg://emoji?id=5987917196469213507) Выберите удобный способ оплаты", parse_mode=ParseMode.MARKDOWN_V2)
+    await callback.message.edit_text(f"![👛](tg://emoji?id=5769403330761593044) Вы оплачиваете: \\+ 4 устройства, месяцев: {month}.\n![👛](tg://emoji?id=5769403330761593044) Сумма: {price}₽ (Скидка: \\-{discount}%)\n\n![📷](tg://emoji?id=5987917196469213507) Выберите удобный способ оплаты", parse_mode=ParseMode.MARKDOWN_V2)
     await callback.message.edit_reply_markup(reply_markup=InlineKeyboardMarkup(inline_keyboard=[
         [InlineKeyboardButton(text="QR/СБП", callback_data="unavailable")],
         [InlineKeyboardButton(text="Международные карты", callback_data="unavailable")],
