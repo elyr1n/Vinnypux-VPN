@@ -77,6 +77,8 @@ async def cryptowallet(callback: CallbackQuery):
 async def send_address_network(callback: CallbackQuery, state: FSMContext):
     data = await state.get_data()
     month, price = data["month"], data["price"]
+    amount = int(price) / networks[network]['rate']
+
     _, network = callback.data.split("_")
 
     await callback.answer()
@@ -85,7 +87,7 @@ async def send_address_network(callback: CallbackQuery, state: FSMContext):
         f"{network}\n"
         "![👛](tg://emoji?id=5769403330761593044) Адрес: "
         f"`{networks[network]['address']}`\n"
-        f"Сумма: `{int(int(price) / networks[network]['rate'])}`\n\n"
+        f"Сумма: `${amount:.4f}`\n\n"
         "![⚡️](tg://emoji?id=5843553939672274145) Ожидаем оплату, после чего вернемся к Вам с уведомлением о подписке",
         parse_mode=ParseMode.MARKDOWN_V2,
     )
