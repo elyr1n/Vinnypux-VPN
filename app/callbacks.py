@@ -86,9 +86,9 @@ async def send_address_network(callback: CallbackQuery, state: FSMContext):
             "![👛](tg://emoji?id=5769403330761593044) Сеть: "
             f"{network}\n"
             "![👛](tg://emoji?id=5769403330761593044) Адрес: "
-            f"`{networks[network]['address']}`\n"
+            f"`{networks[network]["address"]}`\n"
             "![👛](tg://emoji?id=5769403330761593044) Сумма: "
-            f"`${int(price) / networks[network]['rate']:.4f}`\n\n"
+            f"`${int(price) / networks[network]["rate"]:.4f}`\n\n"
             "![⚡️](tg://emoji?id=5843553939672274145) Ожидаем оплату, после чего вернемся к Вам с уведомлением о подписке",
             parse_mode=ParseMode.MARKDOWN_V2,
         )
@@ -96,7 +96,7 @@ async def send_address_network(callback: CallbackQuery, state: FSMContext):
             [InlineKeyboardButton(text="Назад", callback_data="get_subscription")]
         ]))
     except KeyError:
-        await callback.message.answer("Произошла ошибка с оплатой. Повторите попытку.")
+        await callback.message.edit_text("Произошла ошибка с оплатой. Повторите попытку.")
         await callback.message.edit_reply_markup(reply_markup=InlineKeyboardMarkup(inline_keyboard=[
             [InlineKeyboardButton(text="Повторить попытку", callback_data="get_subscription")]
         ]))
