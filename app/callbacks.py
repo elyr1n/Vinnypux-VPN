@@ -53,7 +53,10 @@ async def plan(callback: CallbackQuery, state: FSMContext):
 @router.callback_query(F.data == "unavailable")
 async def unavailable(callback: CallbackQuery, state: FSMContext):
     await callback.answer()
-    await callback.message.edit_text("Этот метод оплаты на данный момент недоступен. Выберите другой.")
+    await callback.message.edit_text(
+        "Этот метод оплаты на данный момент недоступен.\n"
+        "Сейчас доступен метод оплаты только по криптовалюте."
+    )
     await callback.message.edit_reply_markup(reply_markup=InlineKeyboardMarkup(inline_keyboard=[
         [InlineKeyboardButton(text="Выбрать другой способ оплаты", callback_data="get_subscription")]
     ]))
