@@ -26,7 +26,7 @@ async def get_rate(callback: CallbackQuery, state: FSMContext):
     await callback.message.edit_reply_markup(reply_markup=InlineKeyboardMarkup(inline_keyboard=[
         [
             [InlineKeyboardButton(text="🔼", callback_data="device:add")],
-            [InlineKeyboardButton(text=(await state.get_data())["devices"], callback_data="count_devices")],
+            [InlineKeyboardButton(text=str((await state.get_data())["devices"]), callback_data="count_devices")],
             [InlineKeyboardButton(text="🔽", callback_data="device:delete")],
         ]
         [InlineKeyboardButton(text=f"На месяц - {price_devices["one_months"]}₽ (-15%🔥)", callback_data=f"plan:1:{price_devices["one_months"]}:15")],
@@ -48,7 +48,7 @@ async def devices(callback: CallbackQuery, state: FSMContext):
     await callback.message.edit_reply_markup(reply_markup=InlineKeyboardMarkup(inline_keyboard=[
         [
             [InlineKeyboardButton(text="🔼", callback_data="device:add")],
-            [InlineKeyboardButton(text=(await state.get_data())["devices"], callback_data="count_devices")],
+            [InlineKeyboardButton(text=str((await state.get_data())["devices"]), callback_data="count_devices")],
             [InlineKeyboardButton(text="🔽", callback_data="device:delete")],
         ]
         [InlineKeyboardButton(text=f"На месяц - {price_devices["one_months"] + random.randint(10, 30)}₽ (-15%🔥)", callback_data=f"plan:1:{price_devices["one_months"] + random.randint(10, 30)}:15")],
