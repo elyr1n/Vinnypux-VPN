@@ -42,16 +42,20 @@ async def devices(callback: CallbackQuery, state: FSMContext):
     new_count = count_devices + 1 if action == "add" else count_devices - 1
 
     if new_count < 4 or new_count > 50:
-        await callback.answer("Нельзя меньше 4-ёх или больше 50-ти устройств!")
+        await callback.answer("Нельзя меньше 4-ёх или больше 50-ти устройств!", show_alert=True)
         return
 
     await state.update_data(devices=new_count)
 
-    k = 0.75 if new_count <= 5 else 0.50 if new_count <= 15 else 0.35 if new_count <= 30 else 0.2
-
-    p1 = int(price_devices["one_months"]   * new_count * k) + random.randint(10, 30)
-    p3 = int(price_devices["three_months"] * new_count * k) + random.randint(10, 30)
-    p6 = int(price_devices["six_months"]   * new_count * k) + random.randint(10, 30)
+    if new_count == 4:
+        p1 = price_devices["one_months"]
+        p3 = price_devices["three_months"]
+        p6 = price_devices["six_months"]
+    else:
+        k = 0.75 if new_count <= 5 else 0.50 if new_count <= 15 else 0.35 if new_count <= 30 else 0.2
+        p1 = int(price_devices["one_months"]   * new_count * k) + random.randint(10, 30)
+        p3 = int(price_devices["three_months"] * new_count * k) + random.randint(10, 30)
+        p6 = int(price_devices["six_months"]   * new_count * k) + random.randint(10, 30)
 
     await callback.message.edit_reply_markup(reply_markup=InlineKeyboardMarkup(inline_keyboard=[
         [
@@ -65,7 +69,6 @@ async def devices(callback: CallbackQuery, state: FSMContext):
     ]))
 
 
-
 @router.callback_query(F.data.startswith("plan:"))
 async def plan(callback: CallbackQuery, state: FSMContext):
     _, month, price, discount = callback.data.split(":")
@@ -74,7 +77,7 @@ async def plan(callback: CallbackQuery, state: FSMContext):
 
     await callback.answer()
     await callback.message.edit_text(
-        f"![👛](tg://emoji?id=5769403330761593044) Вы оплачиваете: устройств: +{(await state.get_data())["devices"]}, месяцев: "
+        f"![👛](tg://emoji?id=5769403330761593044) Вы оплачиваете: устройств: \\+{(await state.get_data())["devices"]}, месяцев: "
         f"{month}\\.\n"
         "![👛](tg://emoji?id=5769403330761593044) Сумма: "
         f"{price}₽ \\(Скидка: \\-{discount}%\\)\n\n"
