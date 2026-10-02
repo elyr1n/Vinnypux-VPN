@@ -1,27 +1,59 @@
+import random
+
 from aiogram import Router, F
 from aiogram.types import CallbackQuery, InlineKeyboardMarkup, InlineKeyboardButton
 from aiogram.enums import ParseMode
 from aiogram.fsm.context import FSMContext
 
-from app.blockchain_networks import networks
+from app.storage import blockchain_networks, price_devices
 
 router = Router()
 
 
 @router.callback_query(F.data == "get_subscription")
-async def get_rate(callback: CallbackQuery):
+async def get_rate(callback: CallbackQuery, state: FSMContext):
     await callback.answer()
+
+    await state.update_data(devices=4)
+
     await callback.message.edit_text(
         "![💫](tg://emoji?id=5931621672846103580) Преимущества сервиса\n\n"
         "![⚡️](tg://emoji?id=5843553939672274145) Легкое подключение\n"
         "![⚡️](tg://emoji?id=5843553939672274145) Безлимитный трафик\n"
-        "![⚡️](tg://emoji?id=5843553939672274145) До 4 устройств",
+        "![⚡️](tg://emoji?id=5843553939672274145) До 50 устройств",
         parse_mode=ParseMode.MARKDOWN_V2,
     )
     await callback.message.edit_reply_markup(reply_markup=InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text="На месяц - 188₽ (-15%🔥)", callback_data="plan:1:188:15")],
-        [InlineKeyboardButton(text="Три месяца - 490₽ (-25%🔥)", callback_data="plan:3:490:25")],
-        [InlineKeyboardButton(text="Полгода - 990₽ (-30%🔥)", callback_data="plan:6:990:30")]
+        [
+            [InlineKeyboardButton(text="🔼", callback_data="device:add")],
+            [InlineKeyboardButton(text=(await state.get_data())["devices"], callback_data="count_devices")],
+            [InlineKeyboardButton(text="🔽", callback_data="device:delete")],
+        ]
+        [InlineKeyboardButton(text=f"На месяц - {price_devices["one_months"]}₽ (-15%🔥)", callback_data=f"plan:1:{price_devices["one_months"]}:15")],
+        [InlineKeyboardButton(text=f"Три месяца - {price_devices["three_months"]}₽ (-25%🔥)", callback_data=f"plan:3:{price_devices["three_months"]}:25")],
+        [InlineKeyboardButton(text=f"Полгода - {price_devices["six_months"]}₽ (-30%🔥)", callback_data=f"plan:6:{price_devices["six_months"]}:30")]
+    ]))
+
+
+@router.callback_query(F.data.startswith("device:"))
+async def devices(callback: CallbackQuery, state: FSMContext):
+    _, action = callback.data.split(":")
+    count_devices = (await state.get_data())["devices"]
+
+    if action == "add":
+        await state.update_data(devices=count_devices + 1)
+    else:
+        await state.update_data(devices=count_devices - 1)
+
+    await callback.message.edit_reply_markup(reply_markup=InlineKeyboardMarkup(inline_keyboard=[
+        [
+            [InlineKeyboardButton(text="🔼", callback_data="device:add")],
+            [InlineKeyboardButton(text=(await state.get_data())["devices"], callback_data="count_devices")],
+            [InlineKeyboardButton(text="🔽", callback_data="device:delete")],
+        ]
+        [InlineKeyboardButton(text=f"На месяц - {price_devices["one_months"] + random.randint(10, 30)}₽ (-15%🔥)", callback_data=f"plan:1:{price_devices["one_months"] + random.randint(10, 30)}:15")],
+        [InlineKeyboardButton(text=f"Три месяца - {price_devices["three_months"] + random.randint(10, 30)}₽ (-25%🔥)", callback_data=f"plan:3:{price_devices["three_months"] + random.randint(10, 30)}:25")],
+        [InlineKeyboardButton(text=f"Полгода - {price_devices["six_months"] + random.randint(10, 30)}₽ (-30%🔥)", callback_data=f"plan:6:{price_devices["six_months"] + random.randint(10, 30)}:30")]
     ]))
 
 
@@ -85,9 +117,9 @@ async def send_address_network(callback: CallbackQuery, state: FSMContext):
             "![👛](tg://emoji?id=5769403330761593044) Сеть: "
             f"{network.replace("-", "\\-")}\n"
             "![👛](tg://emoji?id=5769403330761593044) Адрес: "
-            f"`{networks[network]["address"]}`\n"
+            f"`{blockchain_networks[network]["address"]}`\n"
             "![👛](tg://emoji?id=5769403330761593044) Сумма: "
-            f"`${int(price) / networks[network]["rate"]:.4f}`\n\n"
+            f"`${int(price) / blockchain_networks[network]["rate"]:.4f}`\n\n"
             "![⚡️](tg://emoji?id=5843553939672274145) Ожидаем оплату, после чего вернемся к Вам с уведомлением о подписке",
             parse_mode=ParseMode.MARKDOWN_V2,
         )
