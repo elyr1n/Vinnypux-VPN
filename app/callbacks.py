@@ -44,7 +44,6 @@ async def plan(callback: CallbackQuery, state: FSMContext):
         [InlineKeyboardButton(text="QR/СБП", callback_data="unavailable")],
         [InlineKeyboardButton(text="Международные карты", callback_data="unavailable")],
         [InlineKeyboardButton(text="Криптовалюта", callback_data="cryptowallet")],
-        [InlineKeyboardButton(text="", callback_data="unavailable")],
         [InlineKeyboardButton(text="Банковская карта", callback_data="unavailable")],
         [InlineKeyboardButton(text="Назад", callback_data="get_subscription")]
     ]))
