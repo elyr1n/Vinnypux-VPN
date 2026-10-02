@@ -52,7 +52,7 @@ async def plan(callback: CallbackQuery, state: FSMContext):
 @router.callback_query(F.data == "unavailable")
 async def unavailable(callback: CallbackQuery):
     await callback.answer()
-    await callback.message.edit_text("![Обратитесь в поддержку для получения нужных реквизитов.](https://t.me/Vinnypux_VPN?direct)", parse_mode=ParseMode.MARKDOWN_V2)
+    await callback.message.edit_text("[Обратитесь в поддержку для получения нужных реквизитов\\.](https://t.me/Vinnypux_VPN?direct)", parse_mode=ParseMode.MARKDOWN_V2)
     await callback.message.edit_reply_markup(reply_markup=InlineKeyboardMarkup(inline_keyboard=[
         [InlineKeyboardButton(text="Выбрать другой способ оплаты", callback_data="get_subscription")]
     ]))
