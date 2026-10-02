@@ -47,10 +47,10 @@ async def devices(callback: CallbackQuery, state: FSMContext):
 
     await callback.message.edit_reply_markup(reply_markup=InlineKeyboardMarkup(inline_keyboard=[
         [
-            [InlineKeyboardButton(text="🔼", callback_data="device:add")],
-            [InlineKeyboardButton(text=str((await state.get_data())["devices"]), callback_data="count_devices")],
-            [InlineKeyboardButton(text="🔽", callback_data="device:delete")],
-        ]
+            InlineKeyboardButton(text="🔼", callback_data="device:add"),
+            InlineKeyboardButton(text=str((await state.get_data())["devices"]), callback_data="count_devices"),
+            InlineKeyboardButton(text="🔽", callback_data="device:delete")
+        ],
         [InlineKeyboardButton(text=f"На месяц - {price_devices["one_months"] + random.randint(10, 30)}₽ (-15%🔥)", callback_data=f"plan:1:{price_devices["one_months"] + random.randint(10, 30)}:15")],
         [InlineKeyboardButton(text=f"Три месяца - {price_devices["three_months"] + random.randint(10, 30)}₽ (-25%🔥)", callback_data=f"plan:3:{price_devices["three_months"] + random.randint(10, 30)}:25")],
         [InlineKeyboardButton(text=f"Полгода - {price_devices["six_months"] + random.randint(10, 30)}₽ (-30%🔥)", callback_data=f"plan:6:{price_devices["six_months"] + random.randint(10, 30)}:30")]
