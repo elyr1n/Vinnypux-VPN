@@ -41,22 +41,19 @@ async def plan(callback: CallbackQuery, state: FSMContext):
         parse_mode=ParseMode.MARKDOWN_V2,
     )
     await callback.message.edit_reply_markup(reply_markup=InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text="̶Q̶R̶/̶С̶Б̶П", callback_data="unavailable")],
-        [InlineKeyboardButton(text="̶М̶е̶ж̶д̶у̶н̶а̶р̶о̶д̶н̶ы̶е̶ ̶к̶а̶р̶т̶ы", callback_data="unavailable")],
+        [InlineKeyboardButton(text="QR/СБП", callback_data="unavailable")],
+        [InlineKeyboardButton(text="Международные карты", callback_data="unavailable")],
         [InlineKeyboardButton(text="Криптовалюта", callback_data="cryptowallet")],
-        [InlineKeyboardButton(text="̶C̶r̶y̶p̶t̶o̶B̶o̶t", callback_data="unavailable")],
-        [InlineKeyboardButton(text="̶Б̶а̶н̶к̶о̶в̶с̶к̶а̶я̶ ̶к̶а̶р̶т̶а", callback_data="unavailable")],
+        [InlineKeyboardButton(text="", callback_data="unavailable")],
+        [InlineKeyboardButton(text="Банковская карта", callback_data="unavailable")],
         [InlineKeyboardButton(text="Назад", callback_data="get_subscription")]
     ]))
 
 
 @router.callback_query(F.data == "unavailable")
-async def unavailable(callback: CallbackQuery, state: FSMContext):
+async def unavailable(callback: CallbackQuery):
     await callback.answer()
-    await callback.message.edit_text(
-        "Этот метод оплаты на данный момент недоступен.\n"
-        "Сейчас доступен метод оплаты только по криптовалюте."
-    )
+    await callback.message.edit_text("![Обратитесь в поддержку для получения нужных реквизитов.](https://t.me/Vinnypux_VPN?direct)", parse_mode=ParseMode.MARKDOWN_V2)
     await callback.message.edit_reply_markup(reply_markup=InlineKeyboardMarkup(inline_keyboard=[
         [InlineKeyboardButton(text="Выбрать другой способ оплаты", callback_data="get_subscription")]
     ]))
