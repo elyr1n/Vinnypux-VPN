@@ -39,23 +39,24 @@ async def get_rate(callback: CallbackQuery, state: FSMContext):
 async def devices(callback: CallbackQuery, state: FSMContext):
     _, action = callback.data.split(":")
     count_devices = (await state.get_data())["devices"]
-    
-    await state.update_data(devices=count_devices + 1 if action == "add" else count_devices - 1)
+    new_count = count_devices + 1 if action == "add" else count_devices - 1
 
-    if count_devices < 4 or count_devices > 50:
+    if new_count < 4 or new_count > 50:
         await callback.answer("Нельзя меньше 4-ёх или больше 50-ти устройств!")
         return
 
-    k = 1.0 if count_devices <= 5 else 0.85 if count_devices <= 15 else 0.75 if count_devices <= 30 else 0.65
+    await state.update_data(devices=new_count)
 
-    p1 = int(price_devices["one_months"]   * count_devices * k) + random.randint(10, 30)
-    p3 = int(price_devices["three_months"] * count_devices * k) + random.randint(10, 30)
-    p6 = int(price_devices["six_months"]   * count_devices * k) + random.randint(10, 30)
+    k = 0.75 if new_count <= 5 else 0.50 if new_count <= 15 else 0.35 if new_count <= 30 else 0.2
+
+    p1 = int(price_devices["one_months"]   * new_count * k) + random.randint(10, 30)
+    p3 = int(price_devices["three_months"] * new_count * k) + random.randint(10, 30)
+    p6 = int(price_devices["six_months"]   * new_count * k) + random.randint(10, 30)
 
     await callback.message.edit_reply_markup(reply_markup=InlineKeyboardMarkup(inline_keyboard=[
         [
             InlineKeyboardButton(text="🔼", callback_data="device:add"),
-            InlineKeyboardButton(text=str(count_devices), callback_data="count_devices"),
+            InlineKeyboardButton(text=str(new_count), callback_data="count_devices"),
             InlineKeyboardButton(text="🔽", callback_data="device:delete")
         ],
         [InlineKeyboardButton(text=f"На месяц - {p1}₽ (-15%🔥)", callback_data=f"plan:1:{p1}:15")],
