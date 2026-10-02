@@ -84,7 +84,7 @@ async def send_address_network(callback: CallbackQuery, state: FSMContext):
 
         await callback.message.edit_text(
             "![👛](tg://emoji?id=5769403330761593044) Сеть: "
-            f"{network}\n"
+            f"{network.replace("-", "\\-")}\n"
             "![👛](tg://emoji?id=5769403330761593044) Адрес: "
             f"`{networks[network]["address"]}`\n"
             "![👛](tg://emoji?id=5769403330761593044) Сумма: "
