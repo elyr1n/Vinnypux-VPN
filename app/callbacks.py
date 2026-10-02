@@ -1,5 +1,3 @@
-import random
-
 from aiogram import Router, F
 from aiogram.types import CallbackQuery, InlineKeyboardMarkup, InlineKeyboardButton
 from aiogram.enums import ParseMode
@@ -52,10 +50,10 @@ async def devices(callback: CallbackQuery, state: FSMContext):
         p3 = price_devices["three_months"]
         p6 = price_devices["six_months"]
     else:
-        k = 0.75 if new_count <= 5 else 0.50 if new_count <= 15 else 0.35 if new_count <= 30 else 0.2
-        p1 = int(price_devices["one_months"]   * new_count * k) + random.randint(10, 30)
-        p3 = int(price_devices["three_months"] * new_count * k) + random.randint(10, 30)
-        p6 = int(price_devices["six_months"]   * new_count * k) + random.randint(10, 30)
+        k = 0.25 if new_count <= 5 else 0.3 if new_count <= 15 else 0.2 if new_count <= 30 else 0.1
+        p1 = int(price_devices["one_months"]   * new_count * k)
+        p3 = int(price_devices["three_months"] * new_count * k)
+        p6 = int(price_devices["six_months"]   * new_count * k)
 
     await callback.message.edit_reply_markup(reply_markup=InlineKeyboardMarkup(inline_keyboard=[
         [
