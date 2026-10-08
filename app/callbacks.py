@@ -12,7 +12,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-admins = os.getenv("ADMINS").split(",")
+admins = os.getenv("ADMINS").split(", ")
 
 router = Router()
 
