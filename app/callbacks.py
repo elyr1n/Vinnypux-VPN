@@ -4,6 +4,7 @@ from aiogram import Router, F, Bot
 from aiogram.types import CallbackQuery, InlineKeyboardMarkup, InlineKeyboardButton
 from aiogram.enums import ParseMode
 from aiogram.fsm.context import FSMContext
+from aiogram.exceptions import TelegramBadRequest
 
 from app.storage import blockchain_networks, price_devices
 
@@ -176,17 +177,20 @@ async def unavailable(callback: CallbackQuery, bot: Bot, state: FSMContext):
     )
 
     for admin in admins:
-        await bot.send_message(
-            chat_id=admin,
-            text=(
-                f"[Пользователь](tg://user?id={callback.from_user.id}) выбрал:\n"
-                f"Устройства: {devices}\n"
-                f"Месяцев: {month}\n"
-                f"Стоимость: {price}\n\n"
-                "Возможно, пользователь скоро напишет в директ ТГК"
-            ),
-            parse_mode=ParseMode.MARKDOWN_V2,
-        )
+        try:
+            await bot.send_message(
+                chat_id=admin,
+                text=(
+                    f"[Пользователь](tg://user?id={callback.from_user.id}) выбрал:\n"
+                    f"Устройства: {devices}\n"
+                    f"Месяцев: {month}\n"
+                    f"Стоимость: {price}\n\n"
+                    "Возможно, пользователь скоро напишет в директ ТГК"
+                ),
+                parse_mode=ParseMode.MARKDOWN_V2,
+            )
+        except TelegramBadRequest:
+            pass
 
     await callback.message.edit_reply_markup(
         reply_markup=InlineKeyboardMarkup(
