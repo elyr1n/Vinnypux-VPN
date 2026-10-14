@@ -179,7 +179,7 @@ async def unavailable(callback: CallbackQuery, bot: Bot, state: FSMContext):
                 await bot.send_message(
                     chat_id=admin,
                     text=(
-                        f"Пользователь (tg://user?id={callback.from_user.id}) выбрал:\n"
+                        f"Пользователь ( tg://user?id={callback.from_user.id} ) выбрал:\n"
                         f"Устройства: {devices}\n"
                         f"Месяцев: {month}\n"
                         f"Стоимость: {price}\n\n"
