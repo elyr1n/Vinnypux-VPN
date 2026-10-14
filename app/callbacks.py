@@ -6,13 +6,7 @@ from aiogram.enums import ParseMode
 from aiogram.fsm.context import FSMContext
 from aiogram.exceptions import TelegramBadRequest
 
-from app.storage import blockchain_networks, price_devices
-
-from dotenv import load_dotenv
-
-load_dotenv()
-
-admins = os.getenv("ADMINS").split(", ")
+from app.storage import blockchain_networks, price_devices, admins, users
 
 router = Router()
 
@@ -169,28 +163,31 @@ async def plan(callback: CallbackQuery, state: FSMContext):
 async def unavailable(callback: CallbackQuery, bot: Bot, state: FSMContext):
     data = await state.get_data()
     month, price, devices = data["month"], data["price"], data["devices"]
+    user_id = callback.from_user.id
 
     await callback.answer()
     await callback.message.edit_text(
-        "[Обратитесь в поддержку для получения нужных реквизитов\\.](https://t.me/Vinnypux_VPN?direct)",
+        "[Обратитесь в поддержку для получения реквизитов для оплаты подписки\\.\nОбязательно сразу сообщите срок подписки и количество устройств\\.](https://t.me/Vinnypux_VPN?direct)",
         parse_mode=ParseMode.MARKDOWN_V2,
     )
 
-    for admin in admins:
-        try:
-            await bot.send_message(
-                chat_id=admin,
-                text=(
-                    f"[Пользователь](tg://user?id={callback.from_user.id}) выбрал:\n"
-                    f"Устройства: {devices}\n"
-                    f"Месяцев: {month}\n"
-                    f"Стоимость: {price}\n\n"
-                    "Возможно, пользователь скоро напишет в директ ТГК"
-                ),
-                parse_mode=ParseMode.MARKDOWN_V2,
-            )
-        except TelegramBadRequest:
-            pass
+    if user_id not in users:
+        users.append(user_id)
+
+        for admin in admins:
+            try:
+                await bot.send_message(
+                    chat_id=admin,
+                    text=(
+                        f"Пользователь (tg://user?id={callback.from_user.id}) выбрал:\n"
+                        f"Устройства: {devices}\n"
+                        f"Месяцев: {month}\n"
+                        f"Стоимость: {price}\n\n"
+                        "Возможно, пользователь скоро напишет в директ ТГК"
+                    ),
+                )
+            except TelegramBadRequest:
+                pass
 
     await callback.message.edit_reply_markup(
         reply_markup=InlineKeyboardMarkup(
